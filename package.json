@@ -1,0 +1,23 @@
+{
+  "name": "laytgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Renderhaf/laytGame.git"
+  },
+  "author": "Dvir Akerman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Renderhaf/laytGame/issues"
+  },
+  "homepage": "https://github.com/Renderhaf/laytGame#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.0"
+  }
+}
