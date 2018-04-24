@@ -19,10 +19,10 @@ io.of("/Game").on("connection", function(socket){
   connections.push(socket);
   console.log("Connected to " + socket.id + " There are currently " + connections.length + " connections")
 
-  socket.on("msg", function(data){
+
+  socket.on("newplayer", function(data){
     console.log(data);
-    io.of("/Alerter").emit("msg",data);
-    console.log("Emmited " + data);
+    io.of("/Game").emit("newplayer",data);
   })
 
   socket.on("disconnect", function(socket){

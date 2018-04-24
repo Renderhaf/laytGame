@@ -21,14 +21,6 @@
     
     var w = c.width;
     var h = c.height;
-    
-    //sockets
-    var host = location.origin + "/Alerter";
-    socket = io.connect(host);
-    socket.on("update",function(data){
-      console.log("data")
-    })
-    //end sockets
 
     //screen
     //check screen refresh
@@ -79,7 +71,7 @@
 
 
     //Player
-    var me = new Player(30,30,30,000,"");
+    var me = new Player(30,30,30,000,prompt("Name: "));
     var acc = 0.5;
 
     var other = new Player(500,500,30,000,"");
@@ -124,8 +116,33 @@
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
-
     //end functions
+
+    //sockets
+    players = {};
+    othershots = [];
+    var host = location.origin + "/Game";
+    socket = io.connect(host);
+
+    socket.on("newplayer",function(data){
+      console.log(data.name);
+      if (data.name != me.name){
+        players[data.name] = data;
+      }
+    })
+    
+    socket.on("newshot",function(data){
+      othershots.push(data);
+    })
+    
+    function sendUpdate(){
+      socket.emit("update",[me.name,me.x,me.y,me.HP]);
+    }
+
+    socket.emit("newplayer",me);
+
+    //end sockets
+
     async function draw(){
       c.width = c.width;
 
@@ -151,6 +168,19 @@
 
       other.angRect(0);
       //end draw+update
+
+      //players
+      // console.log(players, Object.keys(players))
+      if (Object.keys(players).length != 0){
+        Object.keys(players).forEach(function(name){
+          ctx.save();
+          ctx.translate(players[name].x+players[name].size/2,players[name].y+players[name].size/2);
+          ctx.rotate(0);
+          ctx.fillRect(-1*players[name].size/2,-1*players[name].size/2,players[name].size,players[name].size);
+          ctx.restore();
+        });
+      }
+      //end players
       
       //shots
       for (var i = shots.length-1 ; i >= 0; i--){
