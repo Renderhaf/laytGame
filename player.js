@@ -7,9 +7,10 @@ class Player{
     this.dir = [0,0];
 
     //Adjustment Vars
+    this.HP = 100;
     this.friction = 0.9;
-    this.RPS = 1000;
-    this.shotSpeed = 10;
+    this.RPS = 0;
+    this.shotSpeed = 15;
     //End AV
   }
   angRect(a){
@@ -38,5 +39,15 @@ class Player{
     if (this.x+this.size>w){this.x = w-this.size}//right
     if (this.y<0){this.y = 0}//up
     if (this.y+this.size>h){this.y = h-this.size}//down
+  }
+  collide(x,y,s){
+    return (this.x < x && this.x+this.size > x+s && this.y < y && this.y+this.size > y+s);
+  }
+  takeDMG(DMG){
+    this.HP -= DMG;
+    return this.HP <= 0;
+  }
+  die(){
+    alert("DEAD");
   }
 }

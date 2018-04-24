@@ -4,7 +4,7 @@ class Shot{
     this.y = y;
     this.power = power;
     this.speed = speed;
-
+    this.damage = 20;
     this.ang = ang;
     this.dir = [this.speed * Math.cos(this.ang),this.speed * Math.sin(this.ang)]; 
   }

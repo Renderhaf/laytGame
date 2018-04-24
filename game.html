@@ -72,6 +72,8 @@
     //Player
     var me = new Player(30,30,30,000);
     var acc = 0.5;
+
+    var other = new Player(500,500,30,000);
     //EndPlayer
 
     //mouse
@@ -137,6 +139,8 @@
       me.update();
       me.oob(w,h);
       me.angRect(ang);
+
+      other.angRect(0);
       //end draw+update
       
       //shots
@@ -144,8 +148,20 @@
         shots[i].update();
         shots[i].angRect();
         if(shots[i].oob(w,h)){shots.splice(i,1);}
+        
+        if (shots.length != 0 && other.collide(shots[i].x,shots[i].y,shots[i].power)){
+          console.log("Other Got Hit");
+          if (other.takeDMG(shots[i].damage)){
+            other.die();
+          }
+          shots.splice(i,1);
+        }
+
       }
       //endshots
+
+      //debug
+      //end debug
       
       // await sleep(10);
       window.requestAnimationFrame(draw);
