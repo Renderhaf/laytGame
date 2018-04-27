@@ -124,10 +124,20 @@
     var host = location.origin + "/Game";
     socket = io.connect(host);
 
-    socket.on("newplayer",function(data){
+    socket.on("newplayer",function(data){ // this is when a new player comes in
       console.log(data.name);
       if (data.name != me.name){
         players[data.name] = data;
+      }
+    })
+
+    socket.on("players", function(data){ // this is when you start and get all the players
+      console.log("got players...")
+      console.log(data);
+      for (var i = 0; i < data.length; i++){
+        if (data[i].name != me.name){
+          players[data[i].name] = data[i];
+        }
       }
     })
     
@@ -170,7 +180,7 @@
       //end draw+update
 
       //players
-      // console.log(players, Object.keys(players))
+      // draw all the players
       if (Object.keys(players).length != 0){
         Object.keys(players).forEach(function(name){
           ctx.save();
