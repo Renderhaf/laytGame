@@ -125,7 +125,6 @@
     socket = io.connect(host);
 
     socket.on("newplayer",function(data){ // this is when a new player comes in
-      console.log(data.name);
       if (data.name != me.name){
         players[data.name] = data;
       }
@@ -144,12 +143,18 @@
     socket.on("newshot",function(data){
       othershots.push(data);
     })
+
+    socket.on("update",function(data){
+      if (data.name != me.name){
+        players[data.name] = data;
+      }
+    })
     
     function sendUpdate(){
-      socket.emit("update",[me.name,me.x,me.y,me.HP]);
-    }
+      socket.emit("update",me);
+    } var updateInterval = setInterval(sendUpdate,1000/60);
 
-    socket.emit("newplayer",me);
+    socket.emit("newplayer",me); // add me to other players
 
     //end sockets
 
