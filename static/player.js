@@ -13,9 +13,9 @@ class Player{
 
     //AR - 0,20,15
     //AK - 10,3,8
-    //NEGEV - 100,0.3,10
-    this.RPS = 100;
-    this.damage = 0.3;
+    //NEGEV - 60,0.65,10
+    this.RPS = 50;
+    this.damage = 0.65;
     this.shotSpeed = 10;
     //End AV
   }

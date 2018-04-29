@@ -1,5 +1,5 @@
 class Shot{
-  constructor(x,y,power,ang,speed,dmg){
+  constructor(x,y,power,ang,speed,dmg,name){
     this.x = x;
     this.y = y;
     this.power = power;
@@ -7,6 +7,7 @@ class Shot{
     this.damage = dmg;
     this.ang = ang;
     this.dir = [this.speed * Math.cos(this.ang),this.speed * Math.sin(this.ang)]; 
+    this.name = name;
   }
   angRect(){
     ctx.save();

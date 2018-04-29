@@ -40,6 +40,9 @@ io.of("/Game").on("connection", function(socket){
   })
 
   socket.on("disconnect", function(){
+    //send all players to delete the dis player
+    io.of("/Game").emit("disconnect",connections[socket.id]);
+
     // delete the part of object with the correct socket
     console.log("removing " + socket.id);
     delete connections[socket.id];

@@ -10,11 +10,7 @@ module.exports = class Player{
       //Adjustment Vars
       this.HP = 100;
       this.friction = 0.9;
-  
-      //AR - 0,20,15
-      //AK - 10,3,8
-      //NEGEV - 100,0.3,10
-      this.RPS = 100;
+
       this.damage = 0.3;
       this.shotSpeed = 10;
       //End AV
