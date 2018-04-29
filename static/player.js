@@ -14,7 +14,7 @@ class Player{
     //AR - 0,20,15
     //AK - 10,3,8
     //NEGEV - 60,0.65,10
-    this.RPS = 50;
+    this.RPS = 20;
     this.damage = 0.65;
     this.shotSpeed = 10;
     //End AV
@@ -54,6 +54,7 @@ class Player{
     return this.HP <= 0;
   }
   die(){
-    console.log(this.name + " Is DEAD");
+    // console.log(this.name + " Is DEAD");
+    alert(this.name + " IS DEAD")
   }
 }

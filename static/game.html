@@ -75,9 +75,16 @@
     var me = new Player(30,30,30,000,String(Math.random()));
     var acc = 0.5;
     //EndPlayer
+    
+
+    //init socket
+    var host = location.origin + "/Game";
+    socket = io.connect(host);
+    //end init
 
     //mouse
     var shots = [];
+    var shotsBlob = [];
     var ang = 0;
     var shotRPS;
 
@@ -107,7 +114,9 @@
     }
 
     function pushShot(){
-      shots.push(new Shot(me.x+me.size/2,me.y+me.size/2,3,ang+Math.PI,me.shotSpeed,me.damage,me.name));
+      var shot = new Shot(me.x+me.size/2,me.y+me.size/2,3,ang+Math.PI,me.shotSpeed,me.damage,me.name)
+      shots.push(shot);
+      shotsBlob.push(shot);
     }
     //endmouse
     
@@ -119,8 +128,6 @@
 
     //sockets
     players = {};
-    var host = location.origin + "/Game";
-    socket = io.connect(host);
 
     socket.on("newplayer",function(data){ // this is when a new player comes in
       if (data.name != me.name){
@@ -143,7 +150,12 @@
     })
     
     socket.on("shots",function(data){
-      shots.push(data);
+      for (var i = 0; i < data.length; i ++){
+        if (data[i].name != me.name){
+          s = data[i]
+          shots.push(new Shot(s.x,s.y,3,s.ang,s.speed,s.damage,s.name));
+        }
+      }
     })
 
     socket.on("update",function(data){
@@ -154,6 +166,9 @@
     
     function sendUpdate(){
       socket.emit("update",me);
+
+      socket.emit("shots",shotsBlob);
+      shotsBlob = [];
     } var updateInterval = setInterval(sendUpdate,1000/60);
 
     socket.emit("newplayer",me); // add me to other players
@@ -201,20 +216,29 @@
       for (var i = shots.length-1 ; i >= 0; i--){
         shots[i].update();
         shots[i].angRect();
-        if(shots[i].oob(w,h)){shots.splice(i,1);}
+        if(shots[i].oob(w,h)){shots.splice(i,1);continue;}
+
         if (Object.keys(players).length != 0){
-          Object.keys(players).forEach(function(name){ // check if shot hit someone
-          try{
-            if (shots.length != 0 && players[name].collide(shots[i].x,shots[i].y,shots[i].power)){
-              if (players[name].takeDMG(shots[i].damage)){
-                players[name].die();
+          Object.keys(players).forEach(function(name){ // check if shot hit someone else
+            try{
+              if (shots.length != 0 && players[name].collide(shots[i].x,shots[i].y,shots[i].power) && shots[i].name != name){
+                console.log("hit other")
+                if (players[name].takeDMG(shots[i].damage)){ // check if dead
+                  players[name].die();
+                }
+                shots.splice(i,1);
               }
-              shots.splice(i,1);
+            }catch(e){
+              console.log("SHOT ERROR");
             }
-          }catch(e){
-            console.log("SHOT ERROR");
-          }
           })
+          if ((shots[i].name != me.name) && me.collide(shots[i].x,shots[i].y,shots[i].power)){ // check if shot hit you
+            console.log("you are hit!");
+            if (me.takeDMG(shots[i].damage)){ // check if dead
+              console.log("You are dead!");
+            }
+            shots.splice(i,1);
+          }
         }
       }
       //endshots

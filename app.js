@@ -36,7 +36,6 @@ io.of("/Game").on("connection", function(socket){
 
     // send new player to all others
     io.of("/Game").emit("newplayer",data); 
-    console.log(connections);
   })
 
   socket.on("disconnect", function(){
@@ -54,4 +53,7 @@ io.of("/Game").on("connection", function(socket){
     io.of("/Game").emit("update",data);
   })
 
+  socket.on("shots", function(data){
+    io.of("/Game").emit("shots",data);
+  })
 });
