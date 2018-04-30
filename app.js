@@ -3,8 +3,20 @@ var socket = require("socket.io");
 var app = express();
 app.use(express.static(__dirname + '/static'));
 var player = require(__dirname + "/serverplayer.js");
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 connections = {} // dictionary {Socketid:player}
+
+app.get('/GameMenu', function (req, res) {
+  res.sendfile(__dirname + '/static/menu.html');
+});
+app.post("/GameMenu", function(req, res){
+  if (req.body.info){
+    res.send([Object.keys(connections).length])
+  }
+})
 
 app.get('/Game', function (req, res) {
   res.sendfile(__dirname + '/static/game.html');
