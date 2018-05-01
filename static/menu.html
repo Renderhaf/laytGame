@@ -5,22 +5,47 @@
         .info{
             color: gray;
         }
+        table{
+            text-align: center;
+            margin: 0px auto;
+        }
+        .center{
+            margin: auto;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 50%;
+            height: 50%;
+        }
     </style>
 </head>
 <body align="center">
-    <h2>LAYT</h2>
-    <div id="guns">
-        <select name="gun" id="gun-picker" onchange="updateGunInfo(this)">
-            <option value="AK">"Automatic Kalachnikov 47"</option>
-            <option value="12G">"Fishin' and Huntin' Rifle"</option>
-            <option value="UZI">"Mini Sub-Machine-Gun"</option>
-        </select>
-        <div id="guninfo">
-            <h3 class="info">isAutomatic: <span id="isAuto"></span></h3>
-            <h3 class="info">Rounds Per Second: <span id="RPS"></span></h3>
-            <h3 class="info">Damage: <span id="DMG"></span></h3>
-            <h3 class="info">Speed: <span id="SPD"></span></h3>
-        </div>
+    <div class="center">
+        <h2>LAYT</h2>
+        <table>
+            <td>
+                <div id="guns">
+                    <select name="gun" id="gun-picker" onchange="updateGunInfo(this)">
+                        <option value="AK">"Automatic Kalachnikov 47"</option>
+                        <option value="12G">"Fishin' and Huntin' Rifle"</option>
+                        <option value="UZI">"Mini Sub-Machine-Gun"</option>
+                    </select>
+                    <div id="guninfo">
+                        <h3 class="info">isAutomatic: <span id="isAuto"></span></h3>
+                        <h3 class="info">Rounds Per Second: <span id="RPS"></span></h3>
+                        <h3 class="info">Damage: <span id="DMG"></span></h3>
+                        <h3 class="info">Speed: <span id="SPD"></span></h3>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <input type="text" placeholder="USERNAME" id="name" style="margin:10px;"/>
+                <input type="button" value="Enter Game" onclick="enter()"/>
+                <h3 class="info">There Are <span id = "players" >0</span> Players Playing</h3>
+            </td>
+        </table>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script>
@@ -42,12 +67,16 @@
             DMG.innerHTML = values[e.value][2];
             SPD.innerHTML = values[e.value][3];
 
-            localStorage.setItem("RPS",values[e.value][1]);
-            localStorage.setItem("DMG",values[e.value][2]);
-            localStorage.setItem("SPD",values[e.value][3]);
+            localStorage.setItem("GunName",e.value);
         }
-        $.post("/GameMenu", {"info":true}, function(data,status){alert(data)})
-
+        $.post("/GameMenu", {"info":true}, function(data,status){document.getElementById("players").innerHTML = data})
+        function enter(){
+            localStorage.setItem("LyteName", document.getElementById("name").value);
+            document.location = "/Loading?send=Game";
+        }
+        if (Object.keys(localStorage).indexOf("LyteName")!=-1){
+            document.getElementById("name").value = localStorage["LyteName"]; // set TextBox value to registered name
+        }
     </script>
 </body>
 </html>

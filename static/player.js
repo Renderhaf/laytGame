@@ -1,5 +1,5 @@
 class Player{
-  constructor(x,y,size,color,name){
+  constructor(x,y,size,color,name,type="none",HP=100){
     this.x = x;
     this.y = y;
     this.size = size;
@@ -8,15 +8,27 @@ class Player{
     this.name = name;
 
     //Adjustment Vars
-    this.HP = 100;
+    this.HP = HP;
     this.friction = 0.9;
 
     //AR - 0,20,15
     //AK - 10,3,8
     //NEGEV - 60,0.65,10
-    this.RPS = 20;
-    this.damage = 0.65;
-    this.shotSpeed = 10;
+    if (type != "none"){
+      var values = {
+        "12G":[false,0,33,15],
+        "AK":[true,5,20,8],
+        "UZI":[true,30,0.75,10]
+      };
+      console.log(type);
+      this.RPS = values[type][1];
+      this.damage = values[type][2];
+      this.shotSpeed = values[type][3];
+    } else {
+      this.RPS = 0;
+      this.damage = 0;
+      this.shotSpeed = 0;
+    }
     //End AV
   }
   angRect(a){
@@ -52,9 +64,5 @@ class Player{
   takeDMG(DMG){
     this.HP -= DMG;
     return this.HP <= 0;
-  }
-  die(){
-    // console.log(this.name + " Is DEAD");
-    alert(this.name + " IS DEAD")
   }
 }

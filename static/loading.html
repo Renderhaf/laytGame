@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Loading...</title>
+        <style>
+            body{
+                overflow: hidden;
+            }
+            .loader{
+                margin: auto;
+                position: absolute;
+                top: -50;
+                right: 0;
+                bottom: 0;
+                left: -50;
+                width: 100px;
+                height: 100px;
+
+                border: 14px solid rgb(189, 189, 189); /* Light grey */
+                border-top: 14px solid aquamarine;
+                border-radius: 50%;
+
+                animation: spin 2s linear infinite;
+            }
+            @keyframes spin{
+                /* 50%{top: +10px;} */
+                100%{transform: rotate(360deg);}
+            } 
+        </style>
+    </head>
+    <body>
+        <div class="loader"></div>
+        <script>
+            var url = new URL(location.href);
+            var to = url.searchParams.get("send");
+            setTimeout(function(){document.location = "/" + to}, 6000)
+        </script>
+    </body>
+</html>

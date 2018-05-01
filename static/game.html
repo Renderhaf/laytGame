@@ -1,5 +1,21 @@
 <html>
-<title>LAYT</title>
+<head>
+    <title>LAYT</title>
+    <style>
+      body{
+        overflow: hidden;
+      }
+      canvas{
+        position: relative;
+      }
+      .killtext{
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        top: -100px;
+      }
+    </style>
+</head>
 <style>
   HTML, body {
     margin: 0px;
@@ -8,6 +24,7 @@
   }
 </style>
 <body style="padding:0px">
+  <h2 class="killtext" id="killtext"></h2>
   <canvas id="can" style="padding:0"/>
   <script src = "/player.js"></script>
   <script src = "/shot.js"></script>
@@ -72,7 +89,7 @@
 
     //Player
     // prompt("Name: ")
-    var me = new Player(30,30,30,000,String(Math.random()));
+    var me = new Player(30,30,30,000,localStorage["LyteName"],localStorage["GunName"]);
     var acc = 0.5;
     //EndPlayer
     
@@ -160,7 +177,11 @@
 
     socket.on("update",function(data){
       if (data.name != me.name){
-        players[data.name] = new Player(data.x,data.y,data.size,data.color,data.name);;
+        if (Object.keys(players).indexOf(data.name) != -1){
+          players[data.name] = new Player(data.x,data.y,data.size,data.color,data.name,"none",players[data.name].HP);
+        } else {
+          players[data.name] = new Player(data.x,data.y,data.size,data.color,data.name);
+        }
       }
     })
     
@@ -224,20 +245,28 @@
               if (shots.length != 0 && players[name].collide(shots[i].x,shots[i].y,shots[i].power) && shots[i].name != name){
                 console.log("hit other")
                 if (players[name].takeDMG(shots[i].damage)){ // check if dead
-                  players[name].die();
+                  var dead = document.getElementById("killtext");
+                  dead.innerHTML = "You Killed " + name + "!";
+                  dead.style.top = "0px";
+                  setTimeout(function(){dead.style.top = "-100px";},5000); // pop back up
                 }
                 shots.splice(i,1);
               }
             }catch(e){
-              console.log("SHOT ERROR");
+              //console.log("SHOT ERROR");
             }
           })
-          if ((shots[i].name != me.name) && me.collide(shots[i].x,shots[i].y,shots[i].power)){ // check if shot hit you
-            console.log("you are hit!");
-            if (me.takeDMG(shots[i].damage)){ // check if dead
-              console.log("You are dead!");
+          try{
+            if ((shots[i].name != me.name) && me.collide(shots[i].x,shots[i].y,shots[i].power)){ // check if shot hit you
+              console.log("you are hit!");
+              if (me.takeDMG(shots[i].damage)){ // check if dead
+                alert(shots[i].name + "Just Killed You!")
+                document.location = "/GameMenu";
+              }
+              shots.splice(i,1);
             }
-            shots.splice(i,1);
+          } catch(e){
+            //console.log("Player Error. " + e);
           }
         }
       }

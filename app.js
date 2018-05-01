@@ -17,6 +17,9 @@ app.post("/GameMenu", function(req, res){
     res.send([Object.keys(connections).length])
   }
 })
+app.get('/loading', function (req, res) {
+  res.sendfile(__dirname + '/static/loading.html');
+});
 
 app.get('/Game', function (req, res) {
   res.sendfile(__dirname + '/static/game.html');
